@@ -805,7 +805,8 @@ matches the reference more than once.
 \end{enumerate}
 
 \begin{quote}
-\textit{hint: think about the structure of a chromosome}
+\textit{hint: think about the structure of a chromosome and look at the
+lower right corner of the plot}
 \end{quote}
 
 Here is another example of a mummerplot comparing assemblies between two
@@ -983,7 +984,12 @@ see them with the following command:
 PB.contigs.polished.reheader.fasta.masked
 PB.contigs.polished.reheader.fasta.out
 PB.contigs.polished.reheader.fasta.tbl
+PB.contigs.polished.reheader.fasta.cat
+PB.contigs.polished.reheader.fasta.fai
 \end{verbatim}
+
+We already know what \texttt{PB.contigs.polished.reheader.fasta.fai} is.
+The new files are:
 
 \begin{itemize}
 \tightlist
@@ -997,6 +1003,9 @@ PB.contigs.polished.reheader.fasta.tbl
 \item
   \texttt{PB.contigs.polished.reheader.fasta.tbl} contains more specific
   information and numbers on what was masked.
+\item
+  \texttt{PB.contigs.polished.reheader.fasta.cat} contains actual
+  reports of \textit{all} repeat sequences found by RepeatMasker
 \end{itemize}
 
 Look at the contents of \texttt{PB.contigs.polished.reheader.fasta.tbl}
@@ -1037,7 +1046,7 @@ shorter name to make it easier to use later:
     If RepeatMasker did not work properly or took too long to run, we have
 placed a backup masked genome at:
 
-\texttt{assembly\_backups/PB.masked.fasta}
+\texttt{annotation\_backups/PB.masked.fasta}
 
 Once you have masked your genome, move on to
 \href{gene_discovery.ipynb}{Gene Discovery}
@@ -1515,10 +1524,14 @@ command:
     This command simply prints the last 6 lines of this file, and you should
 see something like:
 
+\textbf{Note:} Your numbers for the below \textit{will be different}. This
+is because the output of the \texttt{randomSplit.pl} command is\ldots{}
+random!
+
 \begin{verbatim}
-tag:    7 (0.111)
-taa:   40 (0.635)
-tga:   16 (0.254)
+tag:    8 (0.127)
+taa:   44 (0.698)
+tga:   11 (0.175)
 end *EXON*
 Storing parameters to file...
 Writing exon model parameters [1] to file
@@ -1549,9 +1562,9 @@ the above data. Open the file we need to change:
 And change them to match the output of our command above, like:
 
 \begin{verbatim}
-/Constant/amberprob                   0.111   # Prob(stop codon = tag), if 0 tag is assumed to ...
-/Constant/ochreprob                   0.635   # Prob(stop codon = taa), if 0 taa is assumed to ...
-/Constant/opalprob                    0.254   # Prob(stop codon = tga), if 0 tga is assumed to ...
+/Constant/amberprob                   0.127   # Prob(stop codon = tag), if 0 tag is assumed to ...
+/Constant/ochreprob                   0.698   # Prob(stop codon = taa), if 0 taa is assumed to ...
+/Constant/opalprob                    0.175   # Prob(stop codon = tga), if 0 tga is assumed to ...
 \end{verbatim}
 
 Make sure you \textit{save} the file before exiting - by using either the
@@ -1564,7 +1577,7 @@ our prediction is!
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n}{augustus} \PY{o}{\PYZhy{}}\PY{o}{\PYZhy{}}\PY{n}{species}\PY{o}{=}\PY{n}{mygenome} \PY{n}{junk}\PY{o}{/}\PY{n}{bonafide}\PY{o}{.}\PY{n}{gb}\PY{o}{.}\PY{n}{test} \PY{o}{\PYZgt{}} \PY{n}{test}\PY{o}{.}\PY{n}{out}
+\PY{n}{augustus} \PY{o}{\PYZhy{}}\PY{o}{\PYZhy{}}\PY{n}{species}\PY{o}{=}\PY{n}{mygenome} \PY{n}{bonafide}\PY{o}{.}\PY{n}{gb}\PY{o}{.}\PY{n}{test} \PY{o}{\PYZgt{}} \PY{n}{test}\PY{o}{.}\PY{n}{out}
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1599,11 +1612,12 @@ us exactly how well we did:
 For each, we get different statistics, but let's focus on sensitivity
 and specificity. These two values are commonly used in test-training
 approaches and in machine learning like the one we have used here. For
-our exon level data, we should have a table similar to this:
+our exon level data, we should have a table similar to this (the actual
+numbers will be different):
 
 \includegraphics{images/gene_1.png}
 
-Now what do these values mean in plain English:
+Now what do the values in this table mean in plain English:
 
 \begin{itemize}
 \tightlist
@@ -1619,7 +1633,7 @@ Now what do these values mean in plain English:
     \begin{itemize}
     \tightlist
     \item
-      110/159 = 69.2\%
+      122/159 = 76.7\%
     \end{itemize}
   \end{itemize}
 \item
@@ -1634,7 +1648,7 @@ Now what do these values mean in plain English:
     \begin{itemize}
     \tightlist
     \item
-      1 - (34 / 144) = 76.4\%
+      1 - (29 / 151) = 80.8\%
     \end{itemize}
   \end{itemize}
 \end{itemize}
@@ -1716,6 +1730,9 @@ ENSEMBL website has more information on the format of
 \textit{hint: look back at the introduction to this practical.}
 \end{quote}
 
+If these commands didn't work or took too long to run, we have placed
+backups at \texttt{annotation\_backups/PB.contigs*.gff}
+
     \hypertarget{checking-our-annotations-in-igv}{%
 \subsection{Checking our Annotations in
 IGV}\label{checking-our-annotations-in-igv}}
@@ -1759,11 +1776,17 @@ Now, load your assembly, RNA-seq alignments, and gene data into IGV:
   ``PB.contigs.default.gff'' and click \textit{``Open''}.}
 \end{enumerate}
 
+If you cannot find your files, make sure to navigate to the folder we
+are working in:
+
+Go to \textbf{course\_data/ --\textgreater{} annotation/
+--\textgreater{} data/}
+
 You should now have your assembly loaded into IGV, a set of RNA-seq
 reads labeled ``Pfalc.sorted.bam Coverage'' and ``Pfalc.sorted.bam'' and
 two gene annotations. Make sure you ``\textit{right click}'' on the gene
 annotation and click \textit{``Squished''} so that you can see exon-intron
-information. Your window should look like:
+information. If you ``Zoom in'', your window should look similar to:
 
 \includegraphics{images/IGV_1.png}
 
@@ -1793,18 +1816,8 @@ Now go to the coordinates:
 tig00000001:123,400-126,800
 \end{verbatim}
 
-\textbf{Questions:}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  What is the main difference between your genes and the default genes?
-\item
-  Does the default make sense, why?
-\item
-  What are both predictions missing, and why do you think that is?
-\end{enumerate}
+\textbf{Question:} What are both predictions missing, and why do you
+think that is?
 
 \begin{quote}
 \textit{hint: look back at the introduction to this practical.}
@@ -1990,7 +2003,7 @@ time. Let's take a look at this file:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-\PY{n}{head} \PY{o}{\PYZhy{}}\PY{n}{n} \PY{l+m+mi}{19} \PY{n}{Preichenowi}\PY{o}{.}\PY{n}{prot}\PY{o}{.}\PY{n}{fa}
+\PY{n}{head} \PY{o}{\PYZhy{}}\PY{n}{n} \PY{l+m+mi}{19} \PY{n}{Preichenowi}\PY{o}{.}\PY{n}{chr5}\PY{o}{.}\PY{n}{prot}\PY{o}{.}\PY{n}{fa}
 \end{Verbatim}
 \end{tcolorbox}
 
